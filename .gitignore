@@ -3,3 +3,4 @@
 __pycache__/
 .vscode/
 media/
+node_modules/
