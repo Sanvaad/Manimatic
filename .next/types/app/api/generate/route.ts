@@ -1,4 +1,4 @@
-// File: /Users/sanvadshende/Downloads/Manimatic-master 2/app/api/generate/route.ts
+// File: /Users/sanvadshende/Desktop/Manimatic-master 2/app/api/generate/route.ts
 import * as entry from '../../../../../app/api/generate/route.js'
 import type { NextRequest } from 'next/server.js'
 

@@ -1,12 +1,12 @@
-"use client"
+"use client";
 
-import { motion, AnimatePresence } from "framer-motion"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Send, Brain, PanelLeftOpen } from "lucide-react"
-import { useLocalChatStore } from "@/lib/local-store"
-import { useState, useRef, useEffect } from "react"
-import { ChatMessage } from "./chat-message"
+import { motion, AnimatePresence } from "framer-motion";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Send, Brain, PanelLeftOpen } from "lucide-react";
+import { useLocalChatStore } from "@/lib/local-store";
+import { useState, useRef, useEffect } from "react";
+import { ChatMessage } from "./chat-message";
 
 const SUGGESTED_QUESTIONS = [
   "What is a Neural Network?",
@@ -15,91 +15,108 @@ const SUGGESTED_QUESTIONS = [
   "How does Photosynthesis work?",
   "Show me Bubble Sort Algorithm",
   "What is Quantum Entanglement?",
-]
+];
 
 interface ChatAreaProps {
-  sidebarCollapsed: boolean
-  onExpandSidebar: () => void
-  onBackToLanding: () => void
+  sidebarCollapsed: boolean;
+  onExpandSidebar: () => void;
+  onBackToLanding: () => void;
 }
 
-export function ChatArea({ sidebarCollapsed, onExpandSidebar, onBackToLanding }: ChatAreaProps) {
-  const { messages, addMessage, currentChatId, createChat, setCurrentChat, loadMessages } = useLocalChatStore()
-  const [input, setInput] = useState("")
-  const [isLoading, setIsLoading] = useState(false)
-  const messagesEndRef = useRef<HTMLDivElement>(null)
-  const inputRef = useRef<HTMLInputElement>(null)
+export function ChatArea({
+  sidebarCollapsed,
+  onExpandSidebar,
+  onBackToLanding,
+}: ChatAreaProps) {
+  const {
+    messages,
+    addMessage,
+    currentChatId,
+    createChat,
+    setCurrentChat,
+    loadMessages,
+  } = useLocalChatStore();
+  const [input, setInput] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
 
-  const currentChatMessages = messages.filter(msg => msg.chat_id === currentChatId)
+  const currentChatMessages = messages.filter(
+    (msg) => msg.chat_id === currentChatId
+  );
 
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
-  }, [currentChatMessages])
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [currentChatMessages]);
 
   useEffect(() => {
-    inputRef.current?.focus()
+    inputRef.current?.focus();
     if (currentChatId) {
-      loadMessages(currentChatId)
+      loadMessages(currentChatId);
     }
-  }, [currentChatId, loadMessages])
+  }, [currentChatId, loadMessages]);
 
   const handleSubmit = async (message: string) => {
-    if (!message.trim() || isLoading) return
+    if (!message.trim() || isLoading) return;
 
-    let chatId = currentChatId
+    let chatId = currentChatId;
     if (!chatId) {
-      chatId = await createChat()
+      chatId = await createChat();
       if (chatId) {
-        setCurrentChat(chatId)
+        setCurrentChat(chatId);
       } else {
-        return
+        return;
       }
     }
 
     // Add user message
-    await addMessage(chatId, message, "user")
+    await addMessage(chatId, message, "user");
 
-    setInput("")
-    setIsLoading(true)
+    setInput("");
+    setIsLoading(true);
 
     try {
-      const response = await fetch('/api/generate', {
+      const response = await fetch("/api/generate", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({ prompt: message }),
-      })
+      });
 
       if (!response.ok) {
-        throw new Error(`Error: ${response.status}`)
+        throw new Error(`Error: ${response.status}`);
       }
 
-      const data = await response.json()
+      const data = await response.json();
 
       // Handle both mock response and actual animation response
-      const responseMessage = data.url 
-        ? "Here's your animation:" 
-        : data.explanation || data.message || "Animation generated successfully"
+      const responseMessage = data.url
+        ? "Here's your animation:"
+        : data.explanation ||
+          data.message ||
+          "Animation generated successfully";
 
-      await addMessage(chatId, responseMessage, "assistant", data.url)
+      await addMessage(chatId, responseMessage, "assistant", data.url);
     } catch (err) {
-      console.error("Error generating animation:", err)
-      await addMessage(chatId, 
+      console.error("Error generating animation:", err);
+      await addMessage(
+        chatId,
         "Sorry, there was an error generating your animation. Please try again.",
         "assistant"
-      )
+      );
     } finally {
-      setIsLoading(false)
+      setIsLoading(false);
     }
-  }
+  };
 
   const handleSuggestedQuestion = (question: string) => {
-    handleSubmit(question)
-  }
+    handleSubmit(question);
+  };
 
   // Show suggested questions if no chat or empty chat
-  const showSuggestedQuestions = !currentChatId || currentChatMessages.length === 0
+  const showSuggestedQuestions =
+    !currentChatId || currentChatMessages.length === 0;
 
   if (showSuggestedQuestions) {
     return (
@@ -121,7 +138,6 @@ export function ChatArea({ sidebarCollapsed, onExpandSidebar, onBackToLanding }:
               <motion.div
                 whileHover={{ scale: 1.1 }}
                 whileTap={{ scale: 0.9 }}
-                transition={{ type: "spring", stiffness: 400, damping: 10 }}
                 className="mr-3"
               >
                 <Button
@@ -138,7 +154,6 @@ export function ChatArea({ sidebarCollapsed, onExpandSidebar, onBackToLanding }:
               <motion.div
                 className="text-lg font-bold bg-gradient-to-r from-gray-200 to-gray-400 bg-clip-text text-transparent cursor-pointer mr-4"
                 whileHover={{ scale: 1.02 }}
-                transition={{ type: "spring", stiffness: 400, damping: 10 }}
                 onClick={onBackToLanding}
               >
                 Manimatic
@@ -146,7 +161,9 @@ export function ChatArea({ sidebarCollapsed, onExpandSidebar, onBackToLanding }:
             )}
             <div>
               <h1 className="text-lg font-semibold text-gray-300">New Chat</h1>
-              <p className="text-sm text-gray-600">Choose a topic to get started</p>
+              <p className="text-sm text-gray-600">
+                Choose a topic to get started
+              </p>
             </div>
           </div>
         </motion.div>
@@ -160,9 +177,12 @@ export function ChatArea({ sidebarCollapsed, onExpandSidebar, onBackToLanding }:
             transition={{ delay: 0.2, duration: 0.6 }}
           >
             <Brain className="h-16 w-16 text-gray-700 mx-auto mb-6" />
-            <h2 className="text-2xl font-bold text-gray-300 mb-4">What would you like to explore?</h2>
+            <h2 className="text-2xl font-bold text-gray-300 mb-4">
+              What would you like to explore?
+            </h2>
             <p className="text-gray-500 mb-8 leading-relaxed">
-              Ask me about any concept and I'll create an intelligent visualization to help you understand it better.
+              Ask me about any concept and I'll create an intelligent
+              visualization to help you understand it better.
             </p>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-8">
@@ -176,7 +196,6 @@ export function ChatArea({ sidebarCollapsed, onExpandSidebar, onBackToLanding }:
                   <motion.div
                     whileHover={{ scale: 1.02, y: -2 }}
                     whileTap={{ scale: 0.98 }}
-                    transition={{ type: "spring", stiffness: 400, damping: 10 }}
                   >
                     <Button
                       variant="outline"
@@ -201,8 +220,8 @@ export function ChatArea({ sidebarCollapsed, onExpandSidebar, onBackToLanding }:
         >
           <form
             onSubmit={(e) => {
-              e.preventDefault()
-              handleSubmit(input)
+              e.preventDefault();
+              handleSubmit(input);
             }}
             className="flex space-x-3"
           >
@@ -214,11 +233,7 @@ export function ChatArea({ sidebarCollapsed, onExpandSidebar, onBackToLanding }:
               className="flex-1 bg-gray-900 border-gray-800 text-gray-300 placeholder-gray-600 focus:border-gray-700 focus:ring-gray-700"
               disabled={isLoading}
             />
-            <motion.div
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              transition={{ type: "spring", stiffness: 400, damping: 10 }}
-            >
+            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
               <Button
                 type="submit"
                 disabled={isLoading || !input.trim()}
@@ -230,7 +245,7 @@ export function ChatArea({ sidebarCollapsed, onExpandSidebar, onBackToLanding }:
           </form>
         </motion.div>
       </motion.div>
-    )
+    );
   }
 
   return (
@@ -246,7 +261,6 @@ export function ChatArea({ sidebarCollapsed, onExpandSidebar, onBackToLanding }:
             <motion.div
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.9 }}
-              transition={{ type: "spring", stiffness: 400, damping: 10 }}
               className="mr-3"
             >
               <Button
@@ -263,15 +277,18 @@ export function ChatArea({ sidebarCollapsed, onExpandSidebar, onBackToLanding }:
             <motion.div
               className="text-lg font-bold bg-gradient-to-r from-gray-200 to-gray-400 bg-clip-text text-transparent cursor-pointer mr-4"
               whileHover={{ scale: 1.02 }}
-              transition={{ type: "spring", stiffness: 400, damping: 10 }}
               onClick={onBackToLanding}
             >
               Manimatic
             </motion.div>
           )}
           <div>
-            <h1 className="text-lg font-semibold text-gray-300 truncate">Chat</h1>
-            <p className="text-sm text-gray-600">{currentChatMessages.length} messages</p>
+            <h1 className="text-lg font-semibold text-gray-300 truncate">
+              Chat
+            </h1>
+            <p className="text-sm text-gray-600">
+              {currentChatMessages.length} messages
+            </p>
           </div>
         </div>
       </motion.div>
@@ -321,8 +338,8 @@ export function ChatArea({ sidebarCollapsed, onExpandSidebar, onBackToLanding }:
       >
         <form
           onSubmit={(e) => {
-            e.preventDefault()
-            handleSubmit(input)
+            e.preventDefault();
+            handleSubmit(input);
           }}
           className="flex space-x-3"
         >
@@ -334,11 +351,7 @@ export function ChatArea({ sidebarCollapsed, onExpandSidebar, onBackToLanding }:
             className="flex-1 bg-gray-900 border-gray-800 text-gray-300 placeholder-gray-600 focus:border-gray-700 focus:ring-gray-700"
             disabled={isLoading}
           />
-          <motion.div
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            transition={{ type: "spring", stiffness: 400, damping: 10 }}
-          >
+          <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
             <Button
               type="submit"
               disabled={isLoading || !input.trim()}
@@ -350,5 +363,5 @@ export function ChatArea({ sidebarCollapsed, onExpandSidebar, onBackToLanding }:
         </form>
       </motion.div>
     </div>
-  )
+  );
 }

@@ -29,50 +29,8 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-black via-gray-950 to-gray-900 overflow-hidden relative">
       {/* Subtle animated background elements */}
-      <div className="absolute inset-0 overflow-hidden">
-        <motion.div
-          className="absolute -top-40 -right-40 w-96 h-96 bg-gradient-to-br from-purple-950/15 to-blue-950/15 rounded-full mix-blend-multiply filter blur-3xl"
-          animate={{
-            x: [0, 50, 0],
-            y: [0, -50, 0],
-            scale: [1, 1.1, 1],
-          }}
-          transition={{
-            duration: 20,
-            repeat: Number.POSITIVE_INFINITY,
-            repeatType: "reverse",
-          }}
-        />
-        <motion.div
-          className="absolute -bottom-40 -left-40 w-96 h-96 bg-gradient-to-tr from-indigo-950/15 to-purple-950/15 rounded-full mix-blend-multiply filter blur-3xl"
-          animate={{
-            x: [0, -30, 0],
-            y: [0, 30, 0],
-            scale: [1, 1.2, 1],
-          }}
-          transition={{
-            duration: 25,
-            repeat: Number.POSITIVE_INFINITY,
-            repeatType: "reverse",
-          }}
-        />
-        <motion.div
-          className="absolute top-1/2 left-1/2 w-96 h-96 bg-gradient-to-br from-slate-950/8 to-gray-950/8 rounded-full mix-blend-multiply filter blur-3xl"
-          animate={{
-            x: [0, 40, 0],
-            y: [0, -40, 0],
-            rotate: [0, 180, 360],
-          }}
-          transition={{
-            duration: 30,
-            repeat: Number.POSITIVE_INFINITY,
-            repeatType: "reverse",
-          }}
-        />
-      </div>
 
       {/* Subtle grid pattern overlay */}
-      <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,.01)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,.01)_1px,transparent_1px)] bg-[size:100px_100px]" />
 
       {/* Header */}
       <motion.header
@@ -84,16 +42,11 @@ export default function Home() {
         <motion.div
           className="text-2xl font-bold bg-gradient-to-r from-gray-100 to-gray-400 bg-clip-text text-transparent"
           whileHover={{ scale: 1.05 }}
-          transition={{ type: "spring", stiffness: 400, damping: 10 }}
         >
           Manimatic
         </motion.div>
         <div className="flex gap-3 items-center">
-          <motion.div
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            transition={{ type: "spring", stiffness: 400, damping: 10 }}
-          >
+          <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
             <Button
               variant="outline"
               onClick={handleGetStarted}
@@ -144,7 +97,6 @@ export default function Home() {
               <motion.div
                 whileHover={{ scale: 1.05, y: -2 }}
                 whileTap={{ scale: 0.95 }}
-                transition={{ type: "spring", stiffness: 400, damping: 10 }}
               >
                 <Button
                   size="lg"
@@ -158,7 +110,6 @@ export default function Home() {
               <motion.div
                 whileHover={{ scale: 1.05, y: -2 }}
                 whileTap={{ scale: 0.95 }}
-                transition={{ type: "spring", stiffness: 400, damping: 10 }}
               >
                 <Button
                   size="lg"
@@ -194,7 +145,6 @@ export default function Home() {
             <motion.div
               className="bg-black/40 backdrop-blur-sm rounded-2xl p-8 border border-gray-900/50 shadow-xl"
               whileHover={{ scale: 1.02, y: -5 }}
-              transition={{ type: "spring", stiffness: 300, damping: 20 }}
             >
               <Brain className="h-12 w-12 text-gray-500 mb-6" />
               <h3 className="text-xl font-semibold mb-4 text-gray-300">
@@ -209,7 +159,6 @@ export default function Home() {
             <motion.div
               className="bg-black/40 backdrop-blur-sm rounded-2xl p-8 border border-gray-900/50 shadow-xl"
               whileHover={{ scale: 1.02, y: -5 }}
-              transition={{ type: "spring", stiffness: 300, damping: 20 }}
             >
               <Zap className="h-12 w-12 text-gray-500 mb-6" />
               <h3 className="text-xl font-semibold mb-4 text-gray-300">
@@ -224,7 +173,6 @@ export default function Home() {
             <motion.div
               className="bg-black/40 backdrop-blur-sm rounded-2xl p-8 border border-gray-900/50 shadow-xl"
               whileHover={{ scale: 1.02, y: -5 }}
-              transition={{ type: "spring", stiffness: 300, damping: 20 }}
             >
               <Sparkles className="h-12 w-12 text-gray-500 mb-6" />
               <h3 className="text-xl font-semibold mb-4 text-gray-300">
@@ -243,7 +191,6 @@ export default function Home() {
           className="py-20"
           initial={{ opacity: 0, y: 40 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 1.4, ease: "easeOut" }}
         >
           <div className="text-center mb-16">
             <h2 className="text-4xl font-bold text-gray-300 mb-4">
@@ -282,10 +229,8 @@ export default function Home() {
                 key={item.title}
                 className="bg-black/30 backdrop-blur-sm rounded-xl p-6 border border-gray-900/30 text-center"
                 whileHover={{ scale: 1.05, y: -5 }}
-                transition={{ type: "spring", stiffness: 300, damping: 20 }}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                style={{ animationDelay: `${index * 0.1}s` }}
               >
                 <item.icon className="h-10 w-10 text-gray-500 mx-auto mb-4" />
                 <h3 className="text-lg font-semibold text-gray-300 mb-2">
@@ -333,10 +278,8 @@ export default function Home() {
                   scale: 1.02,
                   backgroundColor: "rgba(0, 0, 0, 0.6)",
                 }}
-                transition={{ type: "spring", stiffness: 300, damping: 20 }}
                 initial={{ opacity: 0, scale: 0.9 }}
                 animate={{ opacity: 1, scale: 1 }}
-                style={{ animationDelay: `${index * 0.05}s` }}
               >
                 <p className="text-gray-400 font-medium">{example}</p>
               </motion.div>
@@ -361,7 +304,6 @@ export default function Home() {
           <motion.div
             whileHover={{ scale: 1.05, y: -2 }}
             whileTap={{ scale: 0.95 }}
-            transition={{ type: "spring", stiffness: 400, damping: 10 }}
           >
             <Button
               size="lg"

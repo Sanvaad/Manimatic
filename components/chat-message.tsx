@@ -1,42 +1,47 @@
-"use client"
+"use client";
 
-import { motion } from "framer-motion"
-import { User, Bot } from "lucide-react"
-import type { Message } from "@/lib/local-store"
-import { useState } from "react"
+import { motion } from "framer-motion";
+import { User, Bot } from "lucide-react";
+import type { Message } from "@/lib/local-store";
+import { useState } from "react";
 
 interface ChatMessageProps {
-  message: Message
-  index: number
+  message: Message;
+  index: number;
 }
 
 export function ChatMessage({ message, index }: ChatMessageProps) {
-  const isUser = message.role === "user"
-  const [isLoading, setIsLoading] = useState(true)
+  const isUser = message.role === "user";
+  const [isLoading, setIsLoading] = useState(true);
 
   // Check if there's an animation URL for assistant messages
-  const hasAnimation = !isUser && message.animation_url
+  const hasAnimation = !isUser && message.animation_url;
 
   // Determine media type based on URL extension
   const getMediaType = (url: string) => {
-    const extension = url.split(".").pop()?.toLowerCase()
+    const extension = url.split(".").pop()?.toLowerCase();
 
     if (extension === "mp4" || extension === "webm" || extension === "mov") {
-      return "video"
+      return "video";
     } else if (extension === "gif") {
-      return "gif"
-    } else if (extension === "jpg" || extension === "jpeg" || extension === "png" || extension === "webp") {
-      return "image"
+      return "gif";
+    } else if (
+      extension === "jpg" ||
+      extension === "jpeg" ||
+      extension === "png" ||
+      extension === "webp"
+    ) {
+      return "image";
     }
 
-    return "video"
-  }
+    return "video";
+  };
 
-  const mediaType = hasAnimation ? getMediaType(message.animation_url!) : null
+  const mediaType = hasAnimation ? getMediaType(message.animation_url!) : null;
 
   const handleLoad = () => {
-    setIsLoading(false)
-  }
+    setIsLoading(false);
+  };
 
   return (
     <motion.div
@@ -50,7 +55,9 @@ export function ChatMessage({ message, index }: ChatMessageProps) {
       }}
       className={`flex ${isUser ? "justify-end" : "justify-start"} mb-4`}
     >
-      <div className={`flex max-w-[80%] ${isUser ? "flex-row-reverse" : "flex-row"} items-start space-x-3`}>
+      <div
+        className={`flex max-w-[80%] ${isUser ? "flex-row-reverse" : "flex-row"} items-start space-x-3`}
+      >
         {/* Avatar */}
         <motion.div
           className={`flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center ${
@@ -61,7 +68,11 @@ export function ChatMessage({ message, index }: ChatMessageProps) {
           whileHover={{ scale: 1.1 }}
           transition={{ type: "spring", stiffness: 400, damping: 10 }}
         >
-          {isUser ? <User className="h-4 w-4 text-gray-400" /> : <Bot className="h-4 w-4 text-gray-500" />}
+          {isUser ? (
+            <User className="h-4 w-4 text-gray-400" />
+          ) : (
+            <Bot className="h-4 w-4 text-gray-500" />
+          )}
         </motion.div>
 
         {/* Message content */}
@@ -72,11 +83,10 @@ export function ChatMessage({ message, index }: ChatMessageProps) {
               : "bg-gradient-to-r from-gray-900 to-black text-gray-400 border border-gray-800"
           }`}
           whileHover={{ scale: 1.01, y: -1 }}
-          transition={{ type: "spring", stiffness: 300, damping: 20 }}
         >
           <div className="space-y-3">
             <p className="text-sm">{message.content}</p>
-            
+
             {hasAnimation && (
               <>
                 {isLoading && (
@@ -84,7 +94,11 @@ export function ChatMessage({ message, index }: ChatMessageProps) {
                     <motion.div
                       className="w-8 h-8 border-4 border-gray-800 border-t-gray-600 rounded-full"
                       animate={{ rotate: 360 }}
-                      transition={{ duration: 1, repeat: Number.POSITIVE_INFINITY, ease: "linear" }}
+                      transition={{
+                        duration: 1,
+                        repeat: Number.POSITIVE_INFINITY,
+                        ease: "linear",
+                      }}
                     />
                   </div>
                 )}
@@ -98,10 +112,10 @@ export function ChatMessage({ message, index }: ChatMessageProps) {
                     className={`max-w-full rounded-lg border border-gray-800 ${isLoading ? "hidden" : "block"}`}
                     style={{ maxHeight: "300px" }}
                     onLoadedData={handleLoad}
-                >
-                  Your browser does not support the video tag.
-                </video>
-              )}
+                  >
+                    Your browser does not support the video tag.
+                  </video>
+                )}
 
                 {mediaType === "gif" && (
                   <img
@@ -127,10 +141,10 @@ export function ChatMessage({ message, index }: ChatMessageProps) {
                   href={message.animation_url!}
                   target="_blank"
                   rel="noopener noreferrer"
-                className="inline-block text-sm text-gray-500 hover:text-gray-400 underline transition-colors duration-200"
-                whileHover={{ scale: 1.05 }}
-                transition={{ type: "spring", stiffness: 400, damping: 10 }}
-              >
+                  className="inline-block text-sm text-gray-500 hover:text-gray-400 underline transition-colors duration-200"
+                  whileHover={{ scale: 1.05 }}
+                  transition={{ type: "spring", stiffness: 400, damping: 10 }}
+                >
                   Open in new tab
                 </motion.a>
               </>
@@ -139,5 +153,5 @@ export function ChatMessage({ message, index }: ChatMessageProps) {
         </motion.div>
       </div>
     </motion.div>
-  )
+  );
 }

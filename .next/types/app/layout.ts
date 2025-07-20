@@ -1,4 +1,4 @@
-// File: /Users/sanvadshende/Downloads/Manimatic-master 2/app/layout.tsx
+// File: /Users/sanvadshende/Desktop/Manimatic-master 2/app/layout.tsx
 import * as entry from '../../../app/layout.js'
 import type { ResolvingMetadata, ResolvingViewport } from 'next/dist/lib/metadata/types/metadata-interface.js'
 
